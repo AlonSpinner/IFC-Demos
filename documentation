@@ -1,0 +1,76 @@
+1) Install conda enviorment
+
+	$ cd ~/Downloads
+	$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
+	$ chmod +x Miniconda3-py39_4.10.3-Linux-x86_64.sh
+	$ ./Miniconda3-py39_4.10.3-Linux-x86_64.sh
+	# I installed miniconda3 in /home/alon/LocalInstalls
+	'''
+	WARNING:
+	    You currently have a PYTHONPATH environment variable set. This may cause
+	    unexpected behavior when running the Python interpreter in Miniconda3.
+	    For best results, please verify that your PYTHONPATH only points to
+	    directories of packages that are compatible with the Python interpreter
+	    in Miniconda3: /home/alon/LocalInstalls/miniconda3
+	Do you wish the installer to initialize Miniconda3
+	by running conda init? [yes|no]
+	[no] >>> yes #THIS IS MY ACTION
+	./Miniconda3-py39_4.10.3-Linux-x86_64.sh: 472: ./Miniconda3-py39_4.10.3-Linux-x86_64.sh: [[: not found
+	no change     /home/alon/LocalInstalls/miniconda3/condabin/conda
+	no change     /home/alon/LocalInstalls/miniconda3/bin/conda
+	no change     /home/alon/LocalInstalls/miniconda3/bin/conda-env
+	no change     /home/alon/LocalInstalls/miniconda3/bin/activate
+	no change     /home/alon/LocalInstalls/miniconda3/bin/deactivate
+	no change     /home/alon/LocalInstalls/miniconda3/etc/profile.d/conda.sh
+	no change     /home/alon/LocalInstalls/miniconda3/etc/fish/conf.d/conda.fish
+	no change     /home/alon/LocalInstalls/miniconda3/shell/condabin/Conda.psm1
+	no change     /home/alon/LocalInstalls/miniconda3/shell/condabin/conda-hook.ps1
+	no change     /home/alon/LocalInstalls/miniconda3/lib/python3.9/site-packages/xontrib/conda.xsh
+	no change     /home/alon/LocalInstalls/miniconda3/etc/profile.d/conda.csh
+	modified      /home/alon/.bashrc
+	'''		
+
+	$ source ./bashrc
+	$ conda create --name=pyoccenv python=3.9
+	$ conda activate pyoccenv
+	$ conda install -c conda-forge pythonocc-core=7.5.1
+	$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #need this for the "added value"
+
+	# https://github.com/tpaviot/pythonocc-demos
+	# https://github.com/tpaviot/pythonocc-documentation
+
+2) go to "pythonocc-demos"
+	$ git clone https://github.com/tpaviot/pythonocc-demos
+	$ cd pythonocc-documentation
+	$ cd examples
+	$ python core_helloworld.py
+	->>> ImportError: No compliant GUI library could be imported.
+	
+	$ conda install -c conda-forge matplotlib # ("$ conda install -c conda-forge pyqt" might be sufficent)
+	$ python core_helloworld.py
+	->>> NICE !! cube on screen
+
+3) add "conda activate pyoccenv" to the ~/.bashrc
+
+4) go to "pythonocc-documentation"
+	$ git clone https://github.com/tpaviot/pythonocc-documentation
+	$ cd pythonocc-documentation
+	$ cd getting_started
+	$ make html
+		'''
+		Makefile:12: *** The 'sphinx-build' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD 			environment variable to point to the full path of the 'sphinx-build' executable. Alternatively you can add the directory 			with the executable to your PATH. If you don't have Sphinx installed, grab it from http://sphinx-doc.org/.  Stop.
+		'''
+		$ conda install -c anaconda sphinx
+		$ conda install -c conda-forge sphinx_rtd_theme
+		$ make html (try again)
+
+	TADA: html documentation now available "Build finished. The HTML pages are in _build/html."
+
+	$ cd ..
+	$ cd api_doc
+	$ sphinx-apidoc $HOME$/LocalInstalls/miniconda3/envs/pyoccenv/lib/python3.9/site-packages/OCC --separate -o api_doc
+	# your OCC package path might be different
+	$ make html
+
+5)
+
