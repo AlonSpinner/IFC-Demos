@@ -1,4 +1,4 @@
-1) Install conda enviorment
+1) Install conda enviorment - pythonocc-core=7.5.1
 
 	$ cd ~/Downloads
 	$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
@@ -35,11 +35,13 @@
 	$ conda activate pyoccenv
 	$ conda install -c conda-forge pythonocc-core=7.5.1
 	$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #need this for the "added value"
+	$ conda install notebook #jupyter
 
 	# https://github.com/tpaviot/pythonocc-demos
 	# https://github.com/tpaviot/pythonocc-documentation
 
-2) go to "pythonocc-demos"
+2) go to ref-gits/pythonocc-demos
+	$ cd ref-gits	
 	$ git clone https://github.com/tpaviot/pythonocc-demos
 	$ cd pythonocc-documentation
 	$ cd examples
@@ -52,7 +54,8 @@
 
 3) add "conda activate pyoccenv" to the ~/.bashrc
 
-4) go to "pythonocc-documentation"
+4) go to ref-gits/pythonocc-documentation
+	$ cd ref-gits
 	$ git clone https://github.com/tpaviot/pythonocc-documentation
 	$ cd pythonocc-documentation
 	$ cd getting_started
@@ -72,5 +75,36 @@
 	# your OCC package path might be different
 	$ make html
 
-5)
+5) open up https://academy.ifcopenshell.org/ for learning how to use python with ifcopenshell :)
+
+
+PROBLEMS!!!!!!
+
+	Trying to visualize anything crashes python.
+	How did I discover? 
+		a. running the code ref-gits/pythonocc-demos/jupyter_notebooks/helloworld.ipynb  ----> WORKS
+		b. running the code ref-gits/pythonocc-demos/jupyter_notebooks/ifc_display_basic_file.ipynb ----> FAILS
+			 VScode restarted the jupyter kernel without telling us. We discovered this when all the variables were earsed
+
+
+	What did I do?:
+		a. converting ifc_display_basic_file.ipynb to .py by using "$ jupyter nbconvert --to script 'ifc_display_basic_file.ipynb'"
+		b. I then ran the py file using "$ python ifc_display_basic_file.py" ---> got the error "Segmentation fault (core dumped)"
+		c. Searching the web: https://forum.freecadweb.org/viewtopic.php?t=37460 ----> I'm not the only one with the problem
+		d. looking at the issues thread in the ifcopenshell git: https://github.com/IfcOpenShell/IfcOpenShell/issues/729
+
+	What's next: Install pythonocc-core=7.4.1 with python3.7
+
+		#if need to remake enviorment: $ conda env remove --name=pyoccenv  		
+		$ conda create --name=pyoccenv python=3.7
+		$ conda install -c conda-forge pythonocc-core=7.4.1
+		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #need this for the "added value"
+		$ conda install -c conda-forge pythreejs
+		$ conda install -c conda-forge matplotlib
+		$ conda install -c conda-forge notebook
+
+
+	
+
+	
 
