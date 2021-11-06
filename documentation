@@ -1,4 +1,4 @@
-1) Install conda enviorment - pythonocc-core=7.5.1
+1) Install conda enviorment - pythonocc-core=7.5.1 (I will later downgrade to 7.4.1 to make things work)
 
 	$ cd ~/Downloads
 	$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
@@ -54,7 +54,7 @@
 
 3) add "conda activate pyoccenv" to the ~/.bashrc
 
-4) go to ref-gits/pythonocc-documentation
+4) go to ref-gits/pythonocc-documentation #NOTE! This seems to be documentation to 7.4
 	$ cd ref-gits
 	$ git clone https://github.com/tpaviot/pythonocc-documentation
 	$ cd pythonocc-documentation
@@ -75,10 +75,7 @@
 	# your OCC package path might be different
 	$ make html
 
-5) open up https://academy.ifcopenshell.org/ for learning how to use python with ifcopenshell :)
-
-
-PROBLEMS!!!!!!
+5) PROBLEMS!!!!!!
 
 	Trying to visualize anything crashes python.
 	How did I discover? 
@@ -98,13 +95,58 @@ PROBLEMS!!!!!!
 		#if need to remake enviorment: $ conda env remove --name=pyoccenv  		
 		$ conda create --name=pyoccenv python=3.7
 		$ conda install -c conda-forge pythonocc-core=7.4.1
-		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #need this for the "added value"
+		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #installed ifcopenshell 0.6
 		$ conda install -c conda-forge pythreejs
-		$ conda install -c conda-forge matplotlib
+		$ conda install -c conda-forge matplotlib #easy way to get pyqt5
 		$ conda install -c conda-forge notebook
+		$ pip install -U ipykernel #allows debugging in vs code
+
+		Installing pythonocc-utils:
+			#DON'T DO THIS - IT WILL FUCK UP YOUR JUPYTER_RENDER:
+			#I later also used the following to make pythonocc utils work with no sucess (https://github.com/tpaviot/pythonocc-utils)	
+			$ conda install -c dlr-sc -c pythonocc pythonocc-core=7.4.1 (not installed)
+			# this did work either:
+			$ conda install -c lorinma pythonocc-utils (wants python 2.7 OR 3.5)
+			
+			#DO DO THIS:
+			$ pip install git+https://github.com/tpaviot/pythonocc-utils
+
+		note to self: I can install versions of modules directly from git using pip IF they have a setup.py
+		(did this for pythonocc-utils)
+
+		another note:
+		reading https://github.com/IfcOpenShell/IfcOpenShell/issues/1327, it would seem python-occ 7.5.1 works well with ifcopenshell 0.7
+
+5) I checked that the renderer is working as I want it:
+	ran /ref-gits/pythonocc-demos/ifc_display_basic_file.ipynb
+
+6) Start learning: Step (A) I created crashCourse.ipynb
+	Using: https://wiki.osarch.org/index.php?title=IfcOpenShell_code_examples#Crash_course
+	
+	What did I learn:	
+		a) read .ifc files 
+		b) elements have guid or global unique identifier
+		c) elements have structred data that is ordered, but can be accessed with get/set
+		d) elements can reference or be references by other elements (example: booleanic operations). This graph can be accessed
+		e) we can also write .ifc files
+		f) just a little of how to extract geomtrey from elements
+	
+	problems: ifc.remove(wall) is not working
+	
+
+6) Geomtrey Manipulation! I Created ConstructNewGeomtrey.ipynb
+	 with https://academy.ifcopenshell.org/posts/using-ifcopenshell-and-pythonocc-to-construct-new-geometry/
+	 there is also this: https://www.linuxtut.com/en/dced9fc3d8869e88ce6c/
+
+	note: I got the IFC models from https://github.com/aothms/IfcOpenHouse
 
 
 	
+	
+
+	
+
+		
 
 	
 
