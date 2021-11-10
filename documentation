@@ -1,4 +1,12 @@
-1) Install conda enviorment - pythonocc-core=7.5.1 (I will later downgrade to 7.4.1 to make things work)
+Intresting Convos:
+https://github.com/IfcOpenShell/IfcOpenShell/issues/1327 - installation
+https://github.com/tpaviot/pythonocc-core/issues/836 - OepnGL issue while creating simple GUI (bug)?
+https://github.com/tpaviot/pythonocc-core/issues/760 - off screen renderer
+
+intresting files:
+/home/alon/Desktop/Link to repos/IFC-Demos/ref-gits/pythonocc-demos/examples/core_visualization_camera_2.py
+
+1) Install conda enviorment
 
 	$ cd ~/Downloads
 	$ wget https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
@@ -30,6 +38,8 @@
 	modified      /home/alon/.bashrc
 	'''		
 
+5) Install related packages
+	-----------------DID NOT WORK: (SKIP)
 	$ source ./bashrc
 	$ conda create --name=pyoccenv python=3.9
 	$ conda activate pyoccenv
@@ -40,7 +50,54 @@
 	# https://github.com/tpaviot/pythonocc-demos
 	# https://github.com/tpaviot/pythonocc-documentation
 
-2) go to ref-gits/pythonocc-demos
+	Trying to visualize anything crashes python.
+	How did I discover? 
+		a. running the code ref-gits/pythonocc-demos/jupyter_notebooks/helloworld.ipynb  ----> WORKS
+		b. running the code ref-gits/pythonocc-demos/jupyter_notebooks/ifc_display_basic_file.ipynb ----> FAILS
+			 VScode restarted the jupyter kernel without telling us. We discovered this when all the variables were earsed
+
+
+	What did I do?:
+		a. converting ifc_display_basic_file.ipynb to .py by using "$ jupyter nbconvert --to script 'ifc_display_basic_file.ipynb'"
+		b. I then ran the py file using "$ python ifc_display_basic_file.py" ---> got the error "Segmentation fault (core dumped)"
+		c. Searching the web: https://forum.freecadweb.org/viewtopic.php?t=37460 ----> I'm not the only one with the problem
+		d. looking at the issues thread in the ifcopenshell git: https://github.com/IfcOpenShell/IfcOpenShell/issues/729
+	
+	-----------------DID WORK: (DO)
+	Install pythonocc-core=7.4.0 with python3.8 %python 3.7, pythonocc-core=7.4.1 also works?
+
+		#if need to remake enviorment: $ conda env remove --name=pyoccenv  		
+		$ conda create --name=pyoccenv python=3.7
+		$ conda install -c conda-forge pythonocc-core=7.4.0
+		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #installed ifcopenshell 0.6
+		$ conda install -c conda-forge pythreejs
+		$ conda install -c conda-forge matplotlib (#easy way to get pyqt5, if not working: $ conda install -c anaconda pyqt)
+		$ conda install -c conda-forge notebook
+		$ pip install -U ipykernel #allows debugging in vs code
+
+		note: wxpython has a bug in it. DONT DO: $ conda install -c conda-forge wxpython (https://github.com/cztomczak/cefpython/issues/349), 
+		you can install pyside 2 instead: $ conda install -c conda-forge pyside2 #does it install pyqt5 even if directly failed?
+
+		Installing pythonocc-utils:
+			#DON'T DO THIS - IT WILL FUCK UP YOUR JUPYTER_RENDER:
+			#I later also used the following to make pythonocc utils work with no sucess (https://github.com/tpaviot/pythonocc-utils)	
+			$ conda install -c dlr-sc -c pythonocc pythonocc-core=7.4.1 (not installed)
+			# this did work either:
+			$ conda install -c lorinma pythonocc-utils (wants python 2.7 OR 3.5)
+			
+			#DO DO THIS:
+			$ pip install git+https://github.com/tpaviot/pythonocc-utils
+
+		note to self: I can install versions of modules directly from git using pip IF they have a setup.py
+		(did this for pythonocc-utils)
+
+		another note:
+		reading https://github.com/IfcOpenShell/IfcOpenShell/issues/1327, it would seem python-occ 7.5.1 works well with ifcopenshell 0.7
+
+		last note:
+		add "conda activate pyoccenv" to the ~/.bashrc
+
+3) create and play with ref-gits/pythonocc-demos
 	$ cd ref-gits	
 	$ git clone https://github.com/tpaviot/pythonocc-demos
 	$ cd pythonocc-documentation
@@ -52,9 +109,7 @@
 	$ python core_helloworld.py
 	->>> NICE !! cube on screen
 
-3) add "conda activate pyoccenv" to the ~/.bashrc
-
-4) go to ref-gits/pythonocc-documentation #NOTE! This seems to be documentation to 7.4
+4) create and play with documentation ref-gits/pythonocc-documentation #NOTE! This seems to be documentation to 7.4
 	$ cd ref-gits
 	$ git clone https://github.com/tpaviot/pythonocc-documentation
 	$ cd pythonocc-documentation
@@ -75,52 +130,15 @@
 	# your OCC package path might be different
 	$ make html
 
-5) PROBLEMS!!!!!!
+5)  create and play with ref-gits/ifcopenshell-notebooks
+	$ ref-gits
+	$ git clone https://github.com/jakob-beetz/ifcopenshell-notebooks
+	# run 05_hello_viewer.ipynb
 
-	Trying to visualize anything crashes python.
-	How did I discover? 
-		a. running the code ref-gits/pythonocc-demos/jupyter_notebooks/helloworld.ipynb  ----> WORKS
-		b. running the code ref-gits/pythonocc-demos/jupyter_notebooks/ifc_display_basic_file.ipynb ----> FAILS
-			 VScode restarted the jupyter kernel without telling us. We discovered this when all the variables were earsed
-
-
-	What did I do?:
-		a. converting ifc_display_basic_file.ipynb to .py by using "$ jupyter nbconvert --to script 'ifc_display_basic_file.ipynb'"
-		b. I then ran the py file using "$ python ifc_display_basic_file.py" ---> got the error "Segmentation fault (core dumped)"
-		c. Searching the web: https://forum.freecadweb.org/viewtopic.php?t=37460 ----> I'm not the only one with the problem
-		d. looking at the issues thread in the ifcopenshell git: https://github.com/IfcOpenShell/IfcOpenShell/issues/729
-
-	What's next: Install pythonocc-core=7.4.1 with python3.7
-
-		#if need to remake enviorment: $ conda env remove --name=pyoccenv  		
-		$ conda create --name=pyoccenv python=3.7
-		$ conda install -c conda-forge pythonocc-core=7.4.1
-		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #installed ifcopenshell 0.6
-		$ conda install -c conda-forge pythreejs
-		$ conda install -c conda-forge matplotlib #easy way to get pyqt5
-		$ conda install -c conda-forge notebook
-		$ pip install -U ipykernel #allows debugging in vs code
-
-		Installing pythonocc-utils:
-			#DON'T DO THIS - IT WILL FUCK UP YOUR JUPYTER_RENDER:
-			#I later also used the following to make pythonocc utils work with no sucess (https://github.com/tpaviot/pythonocc-utils)	
-			$ conda install -c dlr-sc -c pythonocc pythonocc-core=7.4.1 (not installed)
-			# this did work either:
-			$ conda install -c lorinma pythonocc-utils (wants python 2.7 OR 3.5)
-			
-			#DO DO THIS:
-			$ pip install git+https://github.com/tpaviot/pythonocc-utils
-
-		note to self: I can install versions of modules directly from git using pip IF they have a setup.py
-		(did this for pythonocc-utils)
-
-		another note:
-		reading https://github.com/IfcOpenShell/IfcOpenShell/issues/1327, it would seem python-occ 7.5.1 works well with ifcopenshell 0.7
-
-5) I checked that the renderer is working as I want it:
+6) I checked that the renderer is working as I want it:
 	ran /ref-gits/pythonocc-demos/ifc_display_basic_file.ipynb
 
-6) Start learning: Step (A) I created crashCourse.ipynb
+7) Start learning: I created "01_crashCourse.ipynb"
 	Using: https://wiki.osarch.org/index.php?title=IfcOpenShell_code_examples#Crash_course
 	
 	What did I learn:	
@@ -134,11 +152,23 @@
 	problems: ifc.remove(wall) is not working
 	
 
-6) Geomtrey Manipulation! I Created ConstructNewGeomtrey.ipynb
+8) Geomtrey Manipulation! I Created "02_ConstructNewGeomtrey.ipynb"
 	 with https://academy.ifcopenshell.org/posts/using-ifcopenshell-and-pythonocc-to-construct-new-geometry/
 	 there is also this: https://www.linuxtut.com/en/dced9fc3d8869e88ce6c/
 
 	note: I got the IFC models from https://github.com/aothms/IfcOpenHouse
+
+	What did I learn:
+		a) import and display geomtrey
+		b) obtain normal direction of faces that belong to a shape
+		c) filter out or paint faces depending on their normal direction
+
+9) Image Capturing! I created "03_ImageCapture.ipynb"
+	references: 
+		/pythonocc-demos/examples/core_visualization_camera_2
+		/pythonocc-demos/examples/core_visualization_camera
+
+
 
 
 	
