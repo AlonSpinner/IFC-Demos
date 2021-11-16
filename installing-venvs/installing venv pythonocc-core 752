@@ -1,0 +1,11 @@
+Install pythonocc-core=7.5.1 with python3.8 
+
+		$ conda create --name=pyoccenv751 python=3.8
+		$ conda activate pyoccenv751
+		$ conda install -c conda-forge pythonocc-core=7.5.1
+		$ conda install -c conda-forge -c ifcopenshell ifcopenshell
+		$ conda install -c conda-forge pythreejs
+		$ conda install -c conda-forge pyqt
+		$ conda install -c conda-forge notebook
+		$ pip install -U ipykernel #allows debugging in vs code
+		$ pip install git+https://github.com/tpaviot/pythonocc-utils

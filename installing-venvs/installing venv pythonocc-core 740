@@ -1,0 +1,14 @@
+Install pythonocc-core=7.4.0 with python3.8 
+
+		$ conda create --name=pyoccenv741 python=3.8
+		$ conda actiate pyoccenv740
+		$ conda install -c conda-forge pythonocc-core=7.4.0
+		$ conda install -c conda-forge -c ifcopenshell ifcopenshell
+		$ conda install -c conda-forge pythreejs
+		$ conda install -c conda-forge matplotlib #watned to install pyqt, but this didnt work
+		$ conda install -c conda-forge notebook
+		$ pip install -U ipykernel #allows debugging in vs code
+		$ pip install git+https://github.com/tpaviot/pythonocc-utils
+		$ conda install -c conda-forge pyqt
+
+		#Abandoned after ./src/03_ImageCapture_740.ipynb in which I wanted to use updated modules

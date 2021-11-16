@@ -6,6 +6,10 @@ https://github.com/tpaviot/pythonocc-core/issues/760 - off screen renderer
 intresting files:
 /home/alon/Desktop/Link to repos/IFC-Demos/ref-gits/pythonocc-demos/examples/core_visualization_camera_2.py
 
+temp:
+https://github.com/IfcOpenShell/IfcOpenShell/issues/1327
+conda install -c tpaviot -c conda-forge ifcopenshell==0.6.0.a0f79cc
+
 1) Install conda enviorment
 
 	$ cd ~/Downloads
@@ -13,89 +17,24 @@ intresting files:
 	$ chmod +x Miniconda3-py39_4.10.3-Linux-x86_64.sh
 	$ ./Miniconda3-py39_4.10.3-Linux-x86_64.sh
 	# I installed miniconda3 in /home/alon/LocalInstalls
-	'''
-	WARNING:
-	    You currently have a PYTHONPATH environment variable set. This may cause
-	    unexpected behavior when running the Python interpreter in Miniconda3.
-	    For best results, please verify that your PYTHONPATH only points to
-	    directories of packages that are compatible with the Python interpreter
-	    in Miniconda3: /home/alon/LocalInstalls/miniconda3
-	Do you wish the installer to initialize Miniconda3
-	by running conda init? [yes|no]
-	[no] >>> yes #THIS IS MY ACTION
-	./Miniconda3-py39_4.10.3-Linux-x86_64.sh: 472: ./Miniconda3-py39_4.10.3-Linux-x86_64.sh: [[: not found
-	no change     /home/alon/LocalInstalls/miniconda3/condabin/conda
-	no change     /home/alon/LocalInstalls/miniconda3/bin/conda
-	no change     /home/alon/LocalInstalls/miniconda3/bin/conda-env
-	no change     /home/alon/LocalInstalls/miniconda3/bin/activate
-	no change     /home/alon/LocalInstalls/miniconda3/bin/deactivate
-	no change     /home/alon/LocalInstalls/miniconda3/etc/profile.d/conda.sh
-	no change     /home/alon/LocalInstalls/miniconda3/etc/fish/conf.d/conda.fish
-	no change     /home/alon/LocalInstalls/miniconda3/shell/condabin/Conda.psm1
-	no change     /home/alon/LocalInstalls/miniconda3/shell/condabin/conda-hook.ps1
-	no change     /home/alon/LocalInstalls/miniconda3/lib/python3.9/site-packages/xontrib/conda.xsh
-	no change     /home/alon/LocalInstalls/miniconda3/etc/profile.d/conda.csh
-	modified      /home/alon/.bashrc
-	'''		
 
-5) Install related packages
-	-----------------DID NOT WORK: (SKIP)
-	$ source ./bashrc
-	$ conda create --name=pyoccenv python=3.9
-	$ conda activate pyoccenv
-	$ conda install -c conda-forge pythonocc-core=7.5.1
-	$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #need this for the "added value"
-	$ conda install notebook #jupyter
+2) Install related packages
+	See insatllingVenvs folder
+	summary:
+		pythonocc-core version 7.4.0 works, but is old and missing functionality I require
+		pythonocc-core verison 7.4.1 works, and I currently have what I need for the immediate future
+		python-core version 7.5.1 doesnt work, has "Segmentation fault (core dumped)" issues in ifcopenshell
 
-	# https://github.com/tpaviot/pythonocc-demos
-	# https://github.com/tpaviot/pythonocc-documentation
-
-	Trying to visualize anything crashes python.
-	How did I discover? 
-		a. running the code ref-gits/pythonocc-demos/jupyter_notebooks/helloworld.ipynb  ----> WORKS
-		b. running the code ref-gits/pythonocc-demos/jupyter_notebooks/ifc_display_basic_file.ipynb ----> FAILS
-			 VScode restarted the jupyter kernel without telling us. We discovered this when all the variables were earsed
-
-
-	What did I do?:
-		a. converting ifc_display_basic_file.ipynb to .py by using "$ jupyter nbconvert --to script 'ifc_display_basic_file.ipynb'"
-		b. I then ran the py file using "$ python ifc_display_basic_file.py" ---> got the error "Segmentation fault (core dumped)"
-		c. Searching the web: https://forum.freecadweb.org/viewtopic.php?t=37460 ----> I'm not the only one with the problem
-		d. looking at the issues thread in the ifcopenshell git: https://github.com/IfcOpenShell/IfcOpenShell/issues/729
-	
-	-----------------DID WORK: (DO)
-	Install pythonocc-core=7.4.0 with python3.8 %python 3.7, pythonocc-core=7.4.1 also works?
-
-		#if need to remake enviorment: $ conda env remove --name=pyoccenv  		
-		$ conda create --name=pyoccenv python=3.7
-		$ conda install -c conda-forge pythonocc-core=7.4.0
-		$ conda install -c conda-forge -c oce -c dlr-sc -c ifcopenshell ifcopenshell #installed ifcopenshell 0.6
-		$ conda install -c conda-forge pythreejs
-		$ conda install -c conda-forge matplotlib (#easy way to get pyqt5, if not working: $ conda install -c anaconda pyqt)
-		$ conda install -c conda-forge notebook
-		$ pip install -U ipykernel #allows debugging in vs code
-
-		note: wxpython has a bug in it. DONT DO: $ conda install -c conda-forge wxpython (https://github.com/cztomczak/cefpython/issues/349), 
-		you can install pyside 2 instead: $ conda install -c conda-forge pyside2 #does it install pyqt5 even if directly failed?
-
-		Installing pythonocc-utils:
-			#DON'T DO THIS - IT WILL FUCK UP YOUR JUPYTER_RENDER:
-			#I later also used the following to make pythonocc utils work with no sucess (https://github.com/tpaviot/pythonocc-utils)	
-			$ conda install -c dlr-sc -c pythonocc pythonocc-core=7.4.1 (not installed)
-			# this did work either:
-			$ conda install -c lorinma pythonocc-utils (wants python 2.7 OR 3.5)
-			
-			#DO DO THIS:
-			$ pip install git+https://github.com/tpaviot/pythonocc-utils
-
-		note to self: I can install versions of modules directly from git using pip IF they have a setup.py
+	notes and things I learnt:
+		I can install versions of modules directly from git using pip IF they have a setup.py
 		(did this for pythonocc-utils)
 
-		another note:
-		reading https://github.com/IfcOpenShell/IfcOpenShell/issues/1327, it would seem python-occ 7.5.1 works well with ifcopenshell 0.7
 
-		last note:
-		add "conda activate pyoccenv" to the ~/.bashrc
+	relevant urls:
+		https://forum.freecadweb.org/viewtopic.php?t=37460
+		https://github.com/IfcOpenShell/IfcOpenShell/issues/1327, pythonocc 7.5.1 works well with ifcopenshell 0.7 (comment by aothms)
+		https://github.com/cztomczak/cefpython/issues/349, wxpython has a bug in it. DONT DO: $ conda install -c conda-forge wxpython ()
+
 
 3) create and play with ref-gits/pythonocc-demos
 	$ cd ref-gits	
@@ -168,15 +107,8 @@ intresting files:
 		/pythonocc-demos/examples/core_visualization_camera_2
 		/pythonocc-demos/examples/core_visualization_camera
 
-
-
-
-	
-	
-
-	
-
-		
+	It has two files, one for env pyoccenv740 and one for pyoccenv741.
+	pyoccenv740 is missing functionality which I need
 
 	
 
