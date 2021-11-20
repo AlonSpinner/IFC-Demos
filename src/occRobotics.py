@@ -1,9 +1,18 @@
+#!/home/alon/LocalInstalls/miniconda3/envs/pyoccenv741/bin/python
+
+
 import ifcopenshell, ifcopenshell.geom
+
+from OCC.Core.Quantity import Quantity_Color, Quantity_TOC_RGB
+
+from OCC.Display.OCCViewer import Viewer3d
+
 
 from OCC.Core import gp
 import numpy as np
 import math as m
 
+from ctypes import c_double
 
 def eul2R_zyx(roll,pitch,yaw):
     return Rz(yaw) @ Ry(pitch) @ Rx(roll)
@@ -66,3 +75,53 @@ def makeTrsf(R,t):
     gpTrsf.SetTransformation(gp.gp_Ax3(t,n1,n2))
 
     return gpTrsf
+
+def getCameraTransform(cam):
+    #Transform T is an evolving transform, as opposed to coordiante system change.
+    #That is to say, v_camera = inv(T) v_world
+    #This transform gives the pose of the camera in world coordiantes.
+
+    data = cam.OrientationMatrix().GetData()
+    v = list((c_double * 16).from_address(int(data)))
+    M = np.array(v).reshape((4,4)).T
+    
+    #why R_cfix:
+    #R_w2c = M[0:3,0:3] is the rotation matrix from world axes to camera axes
+    #unfortunatly. the camera is defined with x-right, y-up, z - behind
+    #we want the camera to be defined with x-right,y-down, z - front
+    R_cfix = np.array([[1, 0, 0],
+                        [0, -1, 0],
+                        [0, 0,-1]])
+    R_w2c = M[0:3,0:3]
+    R_c2w =  R_w2c.T
+    t_c_c2w = M[0:3,3].reshape(3,1)
+    t_w_w2c = R_c2w @ (-t_c_c2w)
+
+    #not exactly sure why this is how its written.. but it does
+    T = np.vstack((np.hstack([R_c2w @ R_cfix, t_w_w2c]), [0, 0, 0, 1]))
+    return T
+
+def moveCam2Pose(cam,pose):
+    t = pose[:3]
+    R = eul2R_zyx(pose[3],pose[4],pose[5])
+    cam.Transform(makeTrsf(R,t))
+
+def offlineRenderIFC(ifcPath = '../data/IfcOpenHouse_IFC4.ifc'):
+    ifc = ifcopenshell.open(ifcPath)
+
+    settings = ifcopenshell.geom.settings()
+    settings.set(settings.USE_PYTHON_OPENCASCADE, True)
+
+    offscreen_renderer = Viewer3d()
+    offscreen_renderer.Create()
+    offscreen_renderer.SetModeShaded()
+
+    products = ifc.by_type("IfcProduct")
+    for product in products:
+        if product.is_a("IfcOpeningElement"): continue
+        if product.Representation:
+            shape = ifcopenshell.geom.create_shape(settings, product)
+            r, g, b, a = shape.styles[0] # the shape color
+            color = Quantity_Color(abs(r), abs(g), abs(b), Quantity_TOC_RGB)
+            offscreen_renderer.DisplayShape(shape.geometry,color=color, transparency=abs(1 -a),update=True)
+    return offscreen_renderer

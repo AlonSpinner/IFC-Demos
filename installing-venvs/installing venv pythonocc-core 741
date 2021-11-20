@@ -13,3 +13,6 @@ Install pythonocc-core=7.4.1 with python3.8
 		$ conda install -c conda-forge matplotlib 
 		$ conda install -c conda-forge pillow #was already installed
 		$ conda install -c conda-forge scipy
+
+
+		$ conda install -c conda-forge keyboard
