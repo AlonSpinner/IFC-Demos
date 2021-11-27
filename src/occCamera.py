@@ -40,10 +40,16 @@ def getCameraTransform(cam):
 def moveCam2Pose(cam,pose):
     t = pose[:3]
     R = occGeomtrey.eul2R_zyx(pose[3],pose[4],pose[5])
-    Tto = occGeomtrey.T2gpTrsf(occGeomtrey.TfromRt(R,t))
-    Tin = occGeomtrey.T2gpTrsf(getCameraTransform(cam))
-    Tin.Invert()
-    cam.Transform(Tto*Tin)
+    Tto = occGeomtrey.TfromRt(R,t)
+    Tin = getCameraTransform(cam)
+    gpT = occGeomtrey.T2gpTrsf(Tto @ occGeomtrey.InverseTransform(Tin))
+    cam.Transform(gpT)
+
+def getProjectionMatrix(cam):
+    data = cam.ProjectionMatrix().GetData()
+    v = list((c_double * 16).from_address(int(data)))
+    M = np.array(v).reshape((4,4))
+    return M
 
 def offlineRenderIFC(ifcPath = '../data/IfcOpenHouse_IFC4.ifc'):
     ifc = ifcopenshell.open(ifcPath)

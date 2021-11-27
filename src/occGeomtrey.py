@@ -72,3 +72,8 @@ def T2gpTrsf(T):
     float(T[1,0]),float(T[1,1]),float(T[1,2]),float(T[1,3]),
     float(T[2,0]),float(T[2,1]),float(T[2,2]),float(T[2,3]))
     return gpTrsf
+
+def InverseTransform(T):
+    R = T[:3,:3]
+    t = T[:3,3].reshape(3,1)
+    return TfromRt(R.transpose(),-R.transpose()@t)
