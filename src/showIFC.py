@@ -4,7 +4,7 @@ import ifcopenshell, ifcopenshell.geom
 from OCC.Core.Quantity import Quantity_Color, Quantity_TOC_RGB
 from OCC.Display.SimpleGui import init_display
 import time
-import occRobotics
+import occCamera
 
 occ_display, start_display, add_menu, add_function_to_menu = init_display()
 cam = occ_display.View.Camera()
@@ -60,7 +60,7 @@ def loadMenus():
     add_menu('print')
     def printCameraTransform():
         print("%s[s]:" % (time.time() - start_time))
-        print(occRobotics.getCameraTransform(cam))
+        print(occCamera.getCameraTransform(cam))
     add_function_to_menu('print', printCameraTransform)
 
 if __name__ == '__main__':
