@@ -24,11 +24,11 @@ conda install -c tpaviot -c conda-forge ifcopenshell==0.6.0.a0f79cc
 		pythonocc-core version 7.4.0 works, but is old and missing functionality I require
 		pythonocc-core verison 7.4.1 works, and I currently have what I need for the immediate future
 		python-core version 7.5.1 doesnt work, has "Segmentation fault (core dumped)" issues in ifcopenshell
+			edit: it would seem it might work in ubuntu 20.04: https://github.com/tpaviot/pythonocc-core/issues/1055
 
-	notes and things I learnt:
+	things I learnt:
 		I can install versions of modules directly from git using pip IF they have a setup.py
 		(did this for pythonocc-utils)
-
 
 	relevant urls:
 		https://forum.freecadweb.org/viewtopic.php?t=37460
@@ -109,6 +109,10 @@ conda install -c tpaviot -c conda-forge ifcopenshell==0.6.0.a0f79cc
 
 	It has two files, one for env pyoccenv740 and one for pyoccenv741.
 	pyoccenv740 is missing functionality which I need
+
+
+10) Camera projection matrix is in opengl format, not the one I like.. here's some info:
+	https://strawlab.org/2011/11/05/augmented-reality-with-OpenGL/
 
 	
 
