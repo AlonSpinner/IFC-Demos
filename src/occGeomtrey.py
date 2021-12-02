@@ -3,6 +3,14 @@ import ifcopenshell, ifcopenshell.geom
 from OCC.Core import gp
 import numpy as np
 import math as m
+from OCCUtils.Construct import vec_to_dir
+
+from OCC.Core.gp import gp_Pnt, gp_Ax2, gp_Vec
+from OCC.Core.gp import gp_Lin
+from OCC.Core.Geom import Geom_Line
+from OCC.Core.GeomAPI import GeomAPI_IntCS
+from OCC.Core.GeomLProp import GeomLProp_SurfaceTool
+from OCCUtils.Construct import vec_to_dir
 
 def eul2R_zyx(roll,pitch,yaw):
     return Rz(yaw) @ Ry(pitch) @ Rx(roll)
@@ -77,3 +85,11 @@ def InverseTransform(T):
     R = T[:3,:3]
     t = T[:3,3].reshape(3,1)
     return TfromRt(R.transpose(),-R.transpose()@t)
+
+def rayLength (surf, pnt, vec):
+    ray = Geom_Line(gp_Lin(pnt, vec_to_dir(vec.Normalized())))
+    uvw = GeomAPI_IntCS(ray,surf).Parameters(1)
+    u, v, w = uvw
+    p, vx, vy = gp_Pnt(), gp_Vec(), gp_Vec()
+    GeomLProp_SurfaceTool.D1 (surf, u, v, p, vx, vy)
+    return p
