@@ -18,7 +18,7 @@ def getCameraTransform(cam):
 
     data = cam.OrientationMatrix().GetData()
     v = list((c_double * 16).from_address(int(data)))
-    M = np.array(v).reshape((4,4)).T
+    M = np.array(v).reshape((4,4)).T #Transpose as data is stored in row major architecture
     
     #we discovered through trial and error, that M is inv(T)
     R_w2c = M[0:3,0:3]
@@ -48,8 +48,18 @@ def moveCam2Pose(cam,pose):
 def getProjectionMatrix(cam):
     data = cam.ProjectionMatrix().GetData()
     v = list((c_double * 16).from_address(int(data)))
-    M = np.array(v).reshape((4,4))
+    M = np.array(v).reshape((4,4)).T #Transpose as data is stored in row major architecture
     return M
+
+def setOrthographicProjectionMatrix(cam,scale,aspect,n,f):
+    # P[0,0] = 2/scale
+    # P[1,1] = aspect*2/scale
+    # P[2,2] = -2/(f-n)
+    # P[2,3] = -(f+n)/(f-n)
+    cam.SetProjectionType(cam.Projection_Orthographic)
+    cam.SetZRange(n,f) #affects P[2,2] P1[3,2]
+    cam.SetScale(scale) #affects P[1,1] P1[0,0]
+    cam.SetAspect(aspect) #affects P[1,1] P1[0,0]
 
 def offlineRenderIFC(ifcPath = '../data/IfcOpenHouse_IFC4.ifc'):
     ifc = ifcopenshell.open(ifcPath)
