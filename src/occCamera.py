@@ -52,6 +52,12 @@ def getProjectionMatrix(cam):
     return M
 
 def setOrthographicProjectionMatrix(cam,scale,aspect,n,f):
+    #sets camera openGL projection matrix
+
+    #scale = width (pixels)
+    #scale/aspect = width/aspect = height (pixels)
+    #n - nearPlane, f - farPlane
+    
     # P[0,0] = 2/scale
     # P[1,1] = aspect*2/scale
     # P[2,2] = -2/(f-n)
