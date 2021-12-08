@@ -54,8 +54,8 @@ def getProjectionMatrix(cam):
 def setOrthographicProjectionMatrix(cam,scale,aspect,n,f):
     #sets camera openGL projection matrix
 
-    #scale = width (pixels)
-    # aspect = alpha_x/alpha_y
+    #scale = width_pixels/width_meters
+    #aspect = w/h
     #n - nearPlane, f - farPlane
     
     # P[0,0] = 2/scale/aspect
@@ -67,15 +67,16 @@ def setOrthographicProjectionMatrix(cam,scale,aspect,n,f):
     cam.SetScale(scale)
     cam.SetAspect(aspect)
 
-def setPrespectiveProjectionMatrix(cam,scale,aspect,n,f):
+def setPrespectiveProjectionMatrix(cam,fovY,scale,aspect,n,f):
     #sets camera openGL projection matrix
 
-    #scale = width (pixels)
-    #aspect = alpha_x/alpha_y
+    #tan(FOVy) = h/2 / alpha_y 
+    #scale = width_pixels/width_meters
+    #aspect = w/h
     #n - nearPlane, f - farPlane
     
-    # P[0,0] = n*2/scale/aspect
-    # P[1,1] = n*2/scale
+    # print(f'P[0,0] = {1/tan(fovY/2)/aspect}')
+    # print(f'P[1,1] = {1/tan(fovY/2)}')
     # P[2,2] = -(f+n)/(f-n)
     # P[2,3] = -2*f*n/(f-n)
     # P[3,2] = -1
@@ -84,6 +85,7 @@ def setPrespectiveProjectionMatrix(cam,scale,aspect,n,f):
     cam.SetZRange(n,f) 
     cam.SetScale(scale)
     cam.SetAspect(aspect)
+    cam.SetFOVy(np.rad2deg(fovY))
 
 def offlineRenderIFC(ifcPath = '../data/IfcOpenHouse_IFC4.ifc'):
     ifc = ifcopenshell.open(ifcPath)
