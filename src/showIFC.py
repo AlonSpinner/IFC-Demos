@@ -5,11 +5,12 @@ from OCC.Core.Quantity import Quantity_Color, Quantity_TOC_RGB
 from OCC.Display.SimpleGui import init_display
 import time
 import occCamera
+import sys
 
 occ_display, start_display, add_menu, add_function_to_menu = init_display()
 cam = occ_display.View.Camera()
 
-def loadIFC(ifcPath = '../data/IfcOpenHouse_IFC4.ifc'):
+def loadIFC(ifcPath):
     # Open the IFC file using IfcOpenShell
     ifc = ifcopenshell.open(ifcPath)
     settings = ifcopenshell.geom.settings()
@@ -64,7 +65,15 @@ def loadMenus():
     add_function_to_menu('print', printCameraTransform)
 
 if __name__ == '__main__':
-    loadIFC()
+    if len(sys.argv) == 1:
+        ifcPath = '../data/IfcOpenHouse_IFC4.ifc'
+    elif len(sys.argv) == 2:
+        ifcPath = sys.argv[1]
+    else:
+        print('script accepts optional one argument of ifc path')
+        sys.exit()
+
+    loadIFC(ifcPath)
     loadMenus()
     start_time = time.time()
     start_display() #must be used or kernel crashes

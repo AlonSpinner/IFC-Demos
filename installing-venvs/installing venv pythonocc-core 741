@@ -16,3 +16,6 @@ Install pythonocc-core=7.4.1 with python3.8
 
 
 		$ conda install -c conda-forge keyboard
+
+		$ conda install -c conda-forge lark-parser
+ 		$ conda install -c conda-forge toposort
