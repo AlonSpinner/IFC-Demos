@@ -2,6 +2,7 @@ Intresting Convos:
 https://github.com/IfcOpenShell/IfcOpenShell/issues/1327 - installation
 https://github.com/tpaviot/pythonocc-core/issues/836 - OepnGL issue while creating simple GUI (bug)?
 https://github.com/tpaviot/pythonocc-core/issues/760 - off screen renderer
+https://thinkmoult.com/using-ifcopenshell-parse-ifc-files-python.html - dion moult
 
 intresting files:
 /home/alon/Desktop/Link to repos/IFC-Demos/ref-gits/pythonocc-demos/examples/core_visualization_camera_2.py
